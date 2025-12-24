@@ -7,11 +7,10 @@
   },
   "dependencies": {
     "bedrock-protocol": "^3.31.1",
-    "socket.io": "^4.7.2",
-    "raknet-js": "^1.0.1" 
+    "socket.io": "^4.7.2"
   },
   "overrides": {
-    "raknet-native": "npm:raknet-js@^1.0.1"
+    "raknet-native": "npm:@js-prismarine/raknet@^1.0.1"
   },
   "engines": {
     "node": "20.x"
