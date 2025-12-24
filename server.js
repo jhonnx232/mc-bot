@@ -1,4 +1,18 @@
 process.env.DEBUG = "minecraft-protocol"; // Opcional: ajuda a ver erros no log do Render
+// TRUQUE PARA EVITAR ERRO DE BINDINGS NO RENDER
+const Module = require('module');
+const originalRequire = Module.prototype.require;
+Module.prototype.require = function (name) {
+  if (name === 'raknet-native') {
+    return {
+      Client: function() { return {}; },
+      Server: function() { return {}; }
+    };
+  }
+  return originalRequire.apply(this, arguments);
+};
+
+
 const bedrock = require("bedrock-protocol");
 const http = require("http").createServer();
 const io = require("socket.io")(http, {
