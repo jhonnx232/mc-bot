@@ -51,9 +51,7 @@ io.on("connection", (socket) => {
         offline: true,
         skipPing: true,
         // FORMA CORRETA DE PASSAR O MOTOR JS MANUALMENTE:
-        raknetBackend: (client, options) => {
-            return new raknetJs.Client(options);
-          }
+        raknetBackend : 'js'
       });
 
       // Quando o bot entra no mundo

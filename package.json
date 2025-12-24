@@ -8,7 +8,7 @@
  "dependencies": {
     "bedrock-protocol": "^3.31.1",
     "socket.io": "^4.7.2",
-    "@js-prismarine/raknet": "^1.0.1"
+    "node-raknet-native": "^2.3.0"
 },
   "engines": {
     "node": "20.x"
