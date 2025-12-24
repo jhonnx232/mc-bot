@@ -4,8 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "install": "npm install --build-from-source=false"
+    "start": "node server.js"
   },
   "dependencies": {
     "bedrock-protocol": "^3.31.1",
