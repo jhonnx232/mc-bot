@@ -1,0 +1,18 @@
+{
+  "name": "bedrock_bot",
+  "version": "1.0.0",
+  "description": "um bot para servidores aternos se manterem online",
+  "license": "ISC",
+  "author": "jhonnX",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "start",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bedrock-protocol": "^3.52.0",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.8.3"
+  }
+}
