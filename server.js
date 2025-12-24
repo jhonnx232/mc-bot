@@ -14,6 +14,9 @@ Module.prototype.require = function (name) {
 
 
 const bedrock = require("bedrock-protocol");
+const raknetJs = require("@js-prismarine/raknet"); // Motor JS puro
+
+// Resto dos seus imports (http, io, etc...)
 const http = require("http").createServer();
 const io = require("socket.io")(http, {
   cors: {
@@ -47,8 +50,10 @@ io.on("connection", (socket) => {
         version: data.version,
         offline: true,
         skipPing: true,
-        // Força o uso de JavaScript para evitar o erro de bindings C++
-        raknetBackend: "js",
+        // FORMA CORRETA DE PASSAR O MOTOR JS MANUALMENTE:
+        raknetBackend: (client, options) => {
+            return new raknetJs.Client(options);
+          }
       });
 
       // Quando o bot entra no mundo
