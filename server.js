@@ -1,15 +1,3 @@
-// --- ESCUDO ANTI-ERRO DE BINDINGS (DEVE SER A PRIMEIRA COISA NO ARQUIVO) ---
-const Module = require('module');
-const originalRequire = Module.prototype.require;
-Module.prototype.require = function (name) {
-  if (name === 'raknet-native') {
-    // Retorna um objeto fake para não disparar o erro de arquivo ausente
-    return { Client: function() { return {}; }, Server: function() { return {}; } };
-  }
-  return originalRequire.apply(this, arguments);
-};
-// --------------------------------------------------------------------------
-
 const bedrock = require("bedrock-protocol");
 const http = require("http").createServer();
 const io = require("socket.io")(http, {
@@ -19,37 +7,53 @@ const io = require("socket.io")(http, {
 let mcClient = null;
 
 io.on("connection", (socket) => {
-  console.log("📱 App conectado.");
+  console.log("📱 App conectado ao Render.");
 
   socket.on("start-bot", (data) => {
-    if (mcClient) { try { mcClient.close(); } catch(e){} }
+    console.log(`🎮 Dados recebidos: ${data.username} em ${data.host}:${data.port}`);
+
+    // Fecha conexão anterior se existir
+    if (mcClient) {
+      try { mcClient.close(); } catch(e) {}
+    }
 
     try {
+      // CRIAÇÃO DO CLIENTE
       mcClient = bedrock.createClient({
         host: data.host.trim(),
-        port: parseInt(data.port),
+        port: parseInt(data.port) || 19132,
         username: data.username.trim(),
-        version: data.version,
+        version: data.version || "1.20.10",
         offline: true,
         skipPing: true,
-        raknetBackend: 'js' // <--- USA O MOTOR JS INTERNO DO PROTOCOLO
+        raknetBackend: 'js' // <--- IMPORTANTE: Força o motor JS
       });
 
       mcClient.on("spawn", () => {
-        socket.emit("status", { msg: "Bot Online!" });
+        console.log("✅ Bot entrou no mundo!");
+        socket.emit("status", { msg: "Bot Online no Minecraft!" });
       });
 
       mcClient.on("text", (packet) => {
-        socket.emit("mc-message", { user: packet.source_name, text: packet.message });
+        socket.emit("mc-message", { 
+          user: packet.source_name || "Sistema", 
+          text: packet.message 
+        });
       });
 
       mcClient.on("error", (err) => {
-        console.error("❌ Erro no Bot:", err);
-        socket.emit("status", { msg: "Erro: " + err.message });
+        console.error("❌ Erro interno do Bot:", err.message);
+        socket.emit("status", { msg: "Erro no Bot: " + err.message });
+      });
+
+      mcClient.on("close", () => {
+        console.log("🔌 Conexão com Minecraft fechada.");
+        socket.emit("status", { msg: "Bot desconectado." });
       });
 
     } catch (error) {
-      socket.emit("status", { msg: "Falha ao criar cliente JS" });
+      console.error("❌ Falha crítica ao criar cliente:", error);
+      socket.emit("status", { msg: "Falha ao iniciar: " + error.message });
     }
   });
 
@@ -63,6 +67,7 @@ io.on("connection", (socket) => {
   });
 });
 
-http.listen(process.env.PORT || 3000, "0.0.0.0", () => {
-  console.log(`🚀 Servidor pronto na porta ${process.env.PORT || 3000}`);
+const PORT = process.env.PORT || 3000;
+http.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
