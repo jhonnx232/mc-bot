@@ -1,18 +1,17 @@
 {
-  "name": "bedrock_bot",
+  "name": "mc-bot-backend",
   "version": "1.0.0",
-  "description": "um bot para servidores aternos se manterem online",
-  "license": "ISC",
-  "author": "jhonnX",
-  "type": "commonjs",
+  "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "start",
-    "start": "node server.js"
+    "start": "node server.js",
+    "install": "npm install --build-from-source=false"
   },
   "dependencies": {
-    "bedrock-protocol": "^3.52.0",
-    "http": "^0.0.1-security",
-    "socket.io": "^4.8.3"
+    "bedrock-protocol": "^3.31.1",
+    "socket.io": "^4.7.2"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }

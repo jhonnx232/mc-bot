@@ -1,3 +1,4 @@
+process.env.DEBUG = 'minecraft-protocol'; // Opcional: ajuda a ver erros no log do Render
 const bedrock = require('bedrock-protocol');
 const http = require('http').createServer();
 const io = require('socket.io')(http, {
@@ -28,7 +29,8 @@ io.on('connection', (socket) => {
                 username: data.username,
                 version: data.version, // Versão vinda do seletor do App
                 offline: true,
-                skipPing: true
+                skipPing: true,
+                useNativeRaknet: false
             });
 
             // Quando o bot entra no mundo
